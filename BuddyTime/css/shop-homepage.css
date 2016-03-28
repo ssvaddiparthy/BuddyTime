@@ -30,7 +30,7 @@ body {
     margin-bottom: 12px;
     margin-left: 12px;
     color: black;
-    text-shadow: -1px 0 #a8a8a8, 0 1px #a8a8a8, 1px 0 #a8a8a8, 0 -1px #a8a8a8;
+    text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
 
 #friends {
