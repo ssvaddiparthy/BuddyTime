@@ -18,6 +18,12 @@
     <script src="js/bootstrap.min.js"></script>
     <!-- Custom Core JavaScript -->
     <script>
+    global_friends_list = [];
+    function reloadPage() {
+        console.log("We have reloaded the page");
+        location.reload();
+        console.log("We have reloaded the page");
+    } 
     function addNewFriend() {
         var str = window.prompt("Enter the Name of the friend and city seperated by a comma\n Ex: Sandeep,Hyderabad India");
         var params = str.split(',');
@@ -61,6 +67,8 @@
                         localStorage.removeItem('friends_list');
                         localStorage.setItem('friends_list', friends);
                         console.log(localStorage['friends_list']);
+
+                        reloadPage();
 
 
                     } else {
@@ -119,20 +127,43 @@
 
     }        
     function keepRefreshing() {
-        setInterval(function() {
-            var myNode = document.getElementById("friends");
-        myNode.innerHTML = '';
-        add_friends();},120000);
-        console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        console.log("Refreshed");
-        console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        setInterval(function function_name(argument) {
+
+            var times = document.getElementById("friends");
+            times.innerHTML = '';
+            div_string = "<div class=\"col-sm-2 name_cards\"><div class=\"card card-block \"><h3 class=\"card-title\">Sandeep Srivastav</h3><h4 class=\"caption\">New York</h4><h3 class=\"card-text\">1:45 AM</h3></div></div>"
+
+            for (key in global_friends_list) {
+
+                var loc_str = global_friends_list[key]['location'];
+                var name  = global_friends_list[key]['name'];
+                var place = global_friends_list[key]['place'];
+                var k = global_friends_list[key]['offset_epoch'];
+
+                var time = get_foreign_time(k*1000);
+                var div_string2 = div_string;
+
+
+                div_string2 = div_string2.replace("Sandeep Srivastav", name);
+                div_string2 = div_string2.replace("New York", place);
+                div_string2 = div_string2.replace("1:45 AM", time);
+                //console.log(div_string2);
+                $('#friends').append(div_string2);
+
+
+                console.log("we have updated the time");
+                
+            }
+            
+        },25000);
+
         
     }
     
     function add_friends() {
-        console.log('Trying to add friends');
-        friends_list = JSON.parse(localStorage['friends_list']);
-        var friends = friends_list.length;
+        //console.log('Trying to add friends');
+        global_friends_list = JSON.parse(localStorage['friends_list']);
+        var friends = global_friends_list.length;
         //console.log('You have ' + friends + ' friends');
         //console.log("sandeep brrrrrrrra  "+friends_list[0]['location']);
         div_string = "<div class=\"col-sm-2 name_cards\"><div class=\"card card-block \"><h3 class=\"card-title\">Sandeep Srivastav</h3><h4 class=\"caption\">New York</h4><h3 class=\"card-text\">1:45 AM</h3></div></div>"
@@ -140,19 +171,22 @@
         //console.log(div_string);
         //console.log('~~~~~~~~~~~~~~~~~~~~');
         //console.log(friends_list);
-        for (var key in friends_list) {
-            console.log(friends_list[key]);
-            var loc_str = friends_list[key]['location'];
-            var name  = friends_list[key]['name'];
-            var place = friends_list[key]['place'];
-            console.log("Processing "+key+" name "+name+" place "+place);            
+        for (var key in global_friends_list) {
+            //console.log(friends_list[key]);
+            var loc_str = global_friends_list[key]['location'];
+            var name  = global_friends_list[key]['name'];
+            var place = global_friends_list[key]['place'];
+
+                           
+                    
+            //console.log("Processing "+key+" name "+name+" place "+place);            
             var d = new Date();
-            console.log("time is buddy "+d.getTime());
+            //console.log("time is buddy "+d.getTime());
             //console.log("Pakala    "+loc_str);
             var my_url = "https://maps.googleapis.com/maps/api/timezone/json?location=" + loc_str + "&timestamp="+d.getTime()/1000+"&key=AIzaSyCfYRuTlmH6qSh6Vfo54vEK4uSMMjKOZHE";
         //console.log("abhirami   " + my_url);
 
-        (function(name, place) {
+        (function(name, place,key) {
             $.ajax({
             type: "GET",
             url: my_url,
@@ -160,40 +194,44 @@
             success: function(data) {
                 //console.log("e pennale   " + my_url);
                 if (!data.hasOwnProperty('errorMessage')) {
+        
                     var k = data['dstOffset'] + data['rawOffset'];
-                    console.log("dst offset is + "+data['dstOffset']);
-                    console.log("raw offset is + "+data['rawOffset']);
+                    console.log("Adding for "+global_friends_list[key]['name']);
+                    global_friends_list[key]['offset_epoch'] = k;     
+        
+                    //console.log("dst offset is + "+data['dstOffset']);
+                    //console.log("raw offset is + "+data['rawOffset']);
                     //console.log("akalai");
                     //console.log("emaindo ma sandeep ki "+(k));
                     var time = get_foreign_time(k*1000);
                     var div_string2 = div_string;
             //var time = get_time_using_place(friends_list[key]['loc_str']);
             //console.log("Hello Sir this is the key "+key    +" this is the name "+friends_list[key]['name']+" this is the place "+friends_list[key]['place']);
-            if (friends_list.hasOwnProperty(key)) {
+            if (global_friends_list.hasOwnProperty(key)) {
                 div_string2 = div_string2.replace("Sandeep Srivastav", name);
                 div_string2 = div_string2.replace("New York", place);
                 div_string2 = div_string2.replace("1:45 AM", time);
-                console.log(div_string2);
+                //console.log(div_string2);
                 $('#friends').append(div_string2);
             }
 
                 } else {
-                    console.log("akalai");
-                    console.log("Unable to locate a city name");
+                    //console.log("akalai");
+                    //console.log("Unable to locate a city name");
                     //alert("Cannot locate " + place);
                     return -1;
                 }
             },
             error: function(argument) {
-                console.log("suresh");
+                //console.log("suresh");
             }
         });
-        })(name, place);
+        })(name, place,key);
 
         
             
         }
-        //keepRefreshing();
+        keepRefreshing();
     }
     function deleteExisitingFriend(argument) {
         console.log("Sad that you have delete a friend");
@@ -224,12 +262,7 @@
             alert("Cannot Process your input");
         }
 
-    }
-    function reloadPage() {
-        console.log("We have reloaded the page");
-        location.reload();
-        console.log("We have reloaded the page");
-    }    
+    }       
     </script>
 </head>
 
