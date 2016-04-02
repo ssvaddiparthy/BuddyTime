@@ -22,15 +22,15 @@ body {
 .name_cards {
     height: 175px;
     border-style: solid;
-    border-color: #808080;
+    border-color: #grey;
     border-width: 1px;
-    box-shadow: 5px 5px 2px #000000;
+    box-shadow: 5px 5px 2px grey;
     margin-top: 75px;
     margin-right: 12px;
     margin-bottom: 12px;
     margin-left: 12px;
-    color: black;
-    text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+    color: white;
+    text-shadow: 1px 1px black;
 }
 
 #friends {
