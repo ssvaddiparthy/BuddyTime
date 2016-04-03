@@ -36,9 +36,6 @@ function addNewFriend() {
     $.ajax({
         type: "GET",
         url: cordinate_url,
-        error: function(data) {
-            console.log(data);
-        },
         success: function(data) {
             if (data['status'] == 'OK') {
 
@@ -58,14 +55,14 @@ function addNewFriend() {
                     friends = JSON.parse(friends);
 
                 }
+
                 friends.push(new_friend)
                 friends = JSON.stringify(friends);
                 console.log(friends);
                 localStorage.removeItem('friends_list');
                 localStorage.setItem('friends_list', friends);
                 console.log(localStorage['friends_list']);
-                //reloadPage();
-
+                reloadPage();
 
             } else {
                 console.log("Unable to locate a city name");
