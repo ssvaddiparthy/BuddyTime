@@ -39,6 +39,8 @@ function addNewFriend() {
         success: function(data) {
             if (data['status'] == 'OK') {
 
+                //alert(place+","+name);
+
                 var locations = data['results'][0]['geometry']['location']
                 loc_str = (locations['lat'] + ',' + locations['lng']);
                 var new_friend = {
@@ -61,7 +63,7 @@ function addNewFriend() {
                 console.log(friends);
                 localStorage.removeItem('friends_list');
                 localStorage.setItem('friends_list', friends);
-                console.log(localStorage['friends_list']);
+                //alert(localStorage['friends_list']);
                 reloadPage();
 
             } else {
@@ -138,6 +140,12 @@ function keepRefreshing() {
 }
 
 function add_friends() {
+
+    if (localStorage["friends_list"] ==  null)
+    {
+        localStorage.setItem("friends_list","[{\"name\": \"Sandeep Srivastav\",\"place\": \"Hyderabad\",\"location\": \"17.385044,78.486671\"}]");
+    } 
+    
     global_friends_list = JSON.parse(localStorage['friends_list']);
     var friends = global_friends_list.length;
     //console.log('You have ' + friends + ' friends');
@@ -237,6 +245,6 @@ $(window).load(function() {
     $("#buddy_time").click(reloadPage)
     $("#addNewFriend").click(addNewFriend);
     $("#deleteExisitingFriend").click(deleteExisitingFriend);
-    $("#friends").load(keepRefreshing);
+    $("#friends").load(keepRefreshing);   
 
 });
