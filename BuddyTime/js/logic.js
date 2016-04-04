@@ -78,7 +78,6 @@ function addNewFriend() {
 function get_time_using_place(loc_str) {
 
     var my_url = "https://maps.googleapis.com/maps/api/timezone/json?location=" + loc_str + "&timestamp=1331161200&key=AIzaSyCfYRuTlmH6qSh6Vfo54vEK4uSMMjKOZHE";
-    //console.log("abhirami   " + my_url);
     $.ajax({
         type: "GET",
         url: my_url,
@@ -110,7 +109,7 @@ function keepRefreshing() {
 
         var times = document.getElementById("friends");
         times.innerHTML = '';
-        div_string = "<div class=\"col-sm-2 name_cards\"><div class=\"card card-block \"><h3 class=\"card-title\">Sandeep Srivastav</h3><h4 class=\"caption\">New York</h4><h3 class=\"card-text\">1:45 AM</h3></div></div>"
+        div_string = "<div class=\"col-sm-2 name_cards\"><span name=\"deleteButton\" class=\"glyphicon glyphicon-remove pull-right\" id=\"sandeep\" style=\"padding-top: 5%;\"></span><div class=\"card card-block \"><h3 class=\"card-title\">Sandeep Srivastav</h3><h4 class=\"caption\">New York</h4><h3 class=\"card-text\">1:45 AM</h3></div></div>"
 
         for (key in global_friends_list) {
 
@@ -148,78 +147,54 @@ function add_friends() {
     
     global_friends_list = JSON.parse(localStorage['friends_list']);
     var friends = global_friends_list.length;
-    //console.log('You have ' + friends + ' friends');
-    //console.log("sandeep brrrrrrrra  "+friends_list[0]['location']);
-    div_string = "<div class=\"col-sm-2 name_cards\"><div class=\"card card-block \"><h3 class=\"card-title\">Sandeep Srivastav</h3><h4 class=\"caption\">New York</h4><h3 class=\"card-text\">1:45 AM</h3></div></div>"
+    
+    div_string = "<div class=\"col-sm-2 name_cards\"><span name=\"deleteButton\" class=\"glyphicon glyphicon-remove pull-right\" id=\"sandeep\" style=\"padding-top: 5%;\"></span><div class=\"card card-block \"><h3 class=\"card-title\">Sandeep Srivastav</h3><h4 class=\"caption\">New York</h4><h3 class=\"card-text\">1:45 AM</h3></div></div>"
 
-    //console.log(div_string);
-    //console.log('~~~~~~~~~~~~~~~~~~~~');
-    //console.log(friends_list);
     for (var key in global_friends_list) {
-        //console.log(friends_list[key]);
         var loc_str = global_friends_list[key]['location'];
         var name = global_friends_list[key]['name'];
         var place = global_friends_list[key]['place'];
 
-
-
-        //console.log("Processing "+key+" name "+name+" place "+place);            
         var d = new Date();
-        //console.log("time is buddy "+d.getTime());
-        //console.log("Pakala    "+loc_str);
+        
         var my_url = "https://maps.googleapis.com/maps/api/timezone/json?location=" + loc_str + "&timestamp=" + d.getTime() / 1000 + "&key=AIzaSyCfYRuTlmH6qSh6Vfo54vEK4uSMMjKOZHE";
-        //console.log("abhirami   " + my_url);
-
+        
         (function(name, place, key) {
             $.ajax({
                 type: "GET",
                 url: my_url,
                 //async: false,
                 success: function(data) {
-                    //console.log("e pennale   " + my_url);
                     if (!data.hasOwnProperty('errorMessage')) {
 
                         var k = data['dstOffset'] + data['rawOffset'];
                         console.log("Adding for " + global_friends_list[key]['name']);
                         global_friends_list[key]['offset_epoch'] = k;
 
-                        //console.log("dst offset is + "+data['dstOffset']);
-                        //console.log("raw offset is + "+data['rawOffset']);
-                        //console.log("akalai");
-                        //console.log("emaindo ma sandeep ki "+(k));
                         var time = get_foreign_time(k * 1000);
                         var div_string2 = div_string;
-                        //var time = get_time_using_place(friends_list[key]['loc_str']);
-                        //console.log("Hello Sir this is the key "+key    +" this is the name "+friends_list[key]['name']+" this is the place "+friends_list[key]['place']);
+                        
                         if (global_friends_list.hasOwnProperty(key)) {
                             div_string2 = div_string2.replace("Sandeep Srivastav", name);
                             div_string2 = div_string2.replace("New York", place);
                             div_string2 = div_string2.replace("1:45 AM", time);
-                            //console.log(div_string2);
                             $('#friends').append(div_string2);
                         }
 
                     } else {
-                        //console.log("akalai");
-                        //console.log("Unable to locate a city name");
-                        //alert("Cannot locate " + place);
                         return -1;
                     }
                 },
-                error: function(argument) {
-                    //console.log("suresh");
+                error: function(argument) {                    
                 }
             });
         })(name, place, key);
-
-
-
     }
     keepRefreshing();
 }
 
 function deleteExisitingFriend(argument) {
-    console.log("Sad that you have delete a friend");
+    
     params = []
     params[0] = $("#del_frnd_name").val();
     params[1] = $("#del_frnd_city").val();
@@ -234,7 +209,7 @@ function deleteExisitingFriend(argument) {
             localStorage.removeItem('friends_list');
             localStorage.setItem('friends_list', friends);
             reloadPage(true);
-            // return;
+            return;
         }
     }
 
