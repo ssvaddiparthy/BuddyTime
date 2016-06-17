@@ -53,3 +53,14 @@ body {
     background-image: url("../img/banner.jpg");
     height: 10%;
 }
+
+
+.glyphicon-remove{
+    position: relative;
+    right: -1px; 
+    top: 6px; 
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    font-size: large;
+}

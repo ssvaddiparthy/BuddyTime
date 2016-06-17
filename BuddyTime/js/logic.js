@@ -109,7 +109,13 @@ function keepRefreshing() {
 
         var times = document.getElementById("friends");
         times.innerHTML = '';
-        div_string = "<div class=\"col-sm-2 name_cards\"><span name=\"deleteButton\" class=\"glyphicon glyphicon-remove pull-right\" id=\"sandeep\" style=\"padding-top: 5%;\"></span><div class=\"card card-block \"><h3 class=\"card-title\">Sandeep Srivastav</h3><h4 class=\"caption\">New York</h4><h3 class=\"card-text\">1:45 AM</h3></div></div>"
+        div_string = "<div class=\"col-sm-2 name_cards\"><div class=\"card card-block \"><span class=\"glyphicon glyphicon-remove pull-right \" onClick=\"deleteThisFriend()\"></span><br><h3 class=\"card-title\">Sandeep Srivastav</h3><h4 class=\"caption\" name=\"city_name\">New York</h4><h3 class=\"card-text\">1:45 AM</h3></div></div>"
+
+        if(global_friends_list == "")
+	    {
+			var div_str = "<h1 style=\"text-align: center;margin-top:18%;font-family: lucida handwriting; src: 'fonts\l_h_i.ttf' ;display: inline-block;\">Out beyond ideas <br> of wrongdoing and rightdoing<br>there is a field....<br>(And given that Buddy I know your Time.)<br> I'll meet you there. - Rumi</h1>"
+	    	$('#friends').append(div_str);
+	    }
 
         for (key in global_friends_list) {
 
@@ -144,11 +150,17 @@ function add_friends() {
     {
         localStorage.setItem("friends_list","[{\"name\": \"Sandeep Srivastav\",\"place\": \"Hyderabad\",\"location\": \"17.385044,78.486671\"}]");
     } 
-    
+	    
     global_friends_list = JSON.parse(localStorage['friends_list']);
     var friends = global_friends_list.length;
     
-    div_string = "<div class=\"col-sm-2 name_cards\"><span name=\"deleteButton\" class=\"glyphicon glyphicon-remove pull-right\" id=\"sandeep\" style=\"padding-top: 5%;\"></span><div class=\"card card-block \"><h3 class=\"card-title\">Sandeep Srivastav</h3><h4 class=\"caption\">New York</h4><h3 class=\"card-text\">1:45 AM</h3></div></div>"
+    if(global_friends_list == "")
+    {
+		var div_str = "<h1 style=\"text-align: center;margin-top:18%;font-family: lucida handwriting; src: 'fonts\l_h_i.ttf' ;display: inline-block;\">Out beyond ideas <br> of wrongdoing and rightdoing<br>there is a field....<br>(And given that Buddy I know your Time.)<br> I'll meet you there. - Rumi</h1>"
+    	$('#friends').append(div_str);
+    }
+
+    div_string = "<div class=\"col-sm-2 name_cards\"><div class=\"card card-block \"><span class=\"glyphicon glyphicon-remove pull-right \" onClick=\"deleteThisFriend()\"></span><br><h3 class=\"card-title\">Sandeep Srivastav</h3><h4 class=\"caption\" name=\"city_name\">New York</h4><h3 class=\"card-text\">1:45 AM</h3></div></div>"
 
     for (var key in global_friends_list) {
         var loc_str = global_friends_list[key]['location'];
@@ -193,11 +205,11 @@ function add_friends() {
     keepRefreshing();
 }
 
-function deleteExisitingFriend(argument) {
+function deleteExisitingFriend(name,city) {
     
     params = []
-    params[0] = $("#del_frnd_name").val();
-    params[1] = $("#del_frnd_city").val();
+    params[0] = name;
+    params[1] = city;
 
     friends_list = JSON.parse(localStorage['friends_list']);
     var friends = friends_list.length;
@@ -215,11 +227,18 @@ function deleteExisitingFriend(argument) {
 
 }
 
+function deleteThisFriend(){
+	var frnd = $(event.target).siblings()[1].textContent;
+	var place = $(event.target).siblings()[2].textContent;
+
+	deleteExisitingFriend(frnd,place);
+	console.log("We have deleted "+frnd+" who lives at "+place);	
+}
+
 $(window).load(function() {
     add_friends();
     $("#buddy_time").click(reloadPage)
     $("#addNewFriend").click(addNewFriend);
     $("#deleteExisitingFriend").click(deleteExisitingFriend);
-    $("#friends").load(keepRefreshing);   
-
+    $("#friends").load(keepRefreshing);
 });
