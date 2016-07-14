@@ -1,0 +1,9 @@
+//if(data.status == 'OK') block code can be moved to a different function. That is too much of code for a success callback.
+
+    //Why removeItem and setItem. I believe it is key value pairs. If you use setItem, previous value will get overriden.
+
+    //Some detailing can be taken from the address input. Because even "ok" input is been handled properly.
+
+    //addNewFriend is working even if name is empty. Client side validations always help.
+
+    //Instead of having JSON array, try having JSON Object. Your friend name can be a key. Search will be easily if you have keyValue pairs
